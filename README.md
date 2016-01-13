@@ -3,6 +3,7 @@
 ![1](/readme/1.png)
 ![1](/readme/2.png)
 ![1](/readme/3.png)
+![1](/readme/4.png)
 
 ##主要功能
 1. 后台加入布局插件
@@ -24,6 +25,8 @@
 4. 测试账号
     炒鸡管理员：admin@qq.com/12345
     访客：      guest@qq.com/12345
+5. 文档生成
+    想看类参考的话，运行/path/to/your/php.exe doc/runDoc.php,会生成yaf-admin文档。
 
 ##QA
 使用issue 
