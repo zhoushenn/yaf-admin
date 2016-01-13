@@ -1,7 +1,8 @@
 # yaf-admin
-使用yaf开发的后台骨架，带用户验证和rbac权限控制(a rbac admin skeleton power by yaf)
+使用yaf开发的后台骨架，带**用户验证**和**rbac权限控制**
 ![1](/readme/1.png)
 ![1](/readme/2.png)
+![1](/readme/3.png)
 
 ##主要功能
 1. 后台加入布局插件
@@ -20,3 +21,10 @@
 1. 导入**data/test/rbac相关表.sql**到数据库
 2. 修改**application/conf/application.ini**的数据库配置
 3. yaf扩展安装参考官方文档
+4. 测试账号
+    炒鸡管理员：admin@qq.com/12345
+    访客：      guest@qq.com/12345
+
+##QA
+使用issue 
+其次QQ:445484792
