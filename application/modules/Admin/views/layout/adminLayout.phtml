@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>后台</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/dist/css/font-awesome.css">
+    <link rel="stylesheet" href="/dist/css/ionicons.min.css">
+    <link rel="stylesheet" href="/dist/css/AdminLTE.css">
+    <link rel="stylesheet" href="/dist/css/skins/skin-blue.min.css">
+    <?php
+     echo $this->cssSource;
+    ?>
+  </head>
+  <body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+      <header class="main-header">
+        <a href="" class="logo">
+          <span class="logo-mini">管理</span>
+          <span class="logo-lg">管理中心</span>
+        </a>
+        <nav class="navbar navbar-static-top" role="navigation">
+          <!-- Sidebar toggle button-->
+          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+          <!-- Navbar Right Menu -->
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <!-- User Account Menu -->
+              <li class="dropdown user user-menu">
+                <!-- Menu Toggle Button -->
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <!-- The user image in the navbar-->
+                  <img src="/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                  <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                  <span class="hidden-xs"><?=$userInfo['name']?></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <!-- The user image in the menu -->
+                  <li class="user-header">
+                    <p>
+                      <?=$userInfo['name']?>
+                    </p>
+                  </li>
+                  <!-- Menu Footer-->
+                  <li class="user-footer">
+                    <div class="pull-left">
+<!--                      <a href="#" class="btn btn-default btn-flat">用户资料</a>-->
+                    </div>
+                    <div class="pull-right">
+                      <a href="<?php echo Util_Helper::url('login', 'logOut')?>" class="btn btn-default btn-flat">登出</a>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      <!-- Left side column. contains the logo and sidebar -->
+      <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+          <!-- Sidebar Menu -->
+            <ul class="sidebar-menu">
+                <li class="header"></li>
+                <li class="<?php if($currentRequest == '/admin/index/index') echo 'active'; ?>">
+                    <a href="/admin/index/index">
+                        <i class="fa fa-dashboard"></i> <span>首页</span>
+                    </a>
+                </li>
+                <?php
+                echo App_AdminMenu::builtMenu($userInfo, $currentRequest);
+                ?>
+            </ul>
+
+          <!-- /.sidebar-menu -->
+        </section>
+        <!-- /.sidebar -->
+      </aside>
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+<!--          <h1>-->
+<!--            页面标题-->
+<!--            <small>子标题</small>-->
+<!--          </h1>-->
+          <ol class="breadcrumb" style="float: none;position: relative;top: 0; right: 0;">
+            <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+            <li class="active">页面</li>
+          </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <!-- 页面内容 start -->
+          <?php
+            echo $content;
+          ?>
+          <!-- 页面内容 end -->
+        </section><!-- /.content -->
+      </div><!-- /.content-wrapper -->
+      <!-- Main Footer -->
+      <footer class="main-footer">
+        <!-- To the right -->
+        <div class="pull-right hidden-xs">
+          zhoushen
+        </div>
+        <!-- Default to the left -->
+        <strong>Copyright &copy; 2015 <a href="#">Company</a>.</strong> All rights reserved.
+      </footer>
+    </div><!-- ./wrapper -->
+    <script src="/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+    <?php
+      echo $this->jsSource;
+    ?>
+    <!-- AdminLTE App -->
+    <script src="/dist/js/app.min.js"></script>
+  </body>
+</html>

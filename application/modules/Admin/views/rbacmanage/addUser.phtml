@@ -1,0 +1,46 @@
+<?php
+if(isset($updateSence)){
+    $_sence  = 'update';
+    $_action = Util_Helper::url('rbacmanage', 'updateUser');
+}else{
+    $_sence  = 'add';
+    $_action =  Util_Helper::url('rbacmanage', 'addUser');
+}
+?>
+<div class="box box-success">
+    <div class="box-header with-border">
+        <h3 class="box-title">添加用户</h3>
+    </div><!-- /.box-header -->
+    <div class="box-body">
+        <div class="col-md-4 col-md-offset-4">
+            <form role="form" id="user-form" method="POST" action="<?=$_action?>">
+                <input type="hidden" name="id" value="<?= $userInfo['id']?>">
+                <div class="form-group">
+                    <label>用户名称</label>
+                    <input type="text" class="form-control" name="name" value="<?= $userInfo['name']?>" required="required">
+                </div>
+                <div class="form-group">
+                    <label>用户邮箱</label>
+                    <input type="email" class="form-control" name="email" value="<?= $userInfo['email']?>" required="required">
+                </div>
+                <?php if($_sence == 'add'):?>
+                    <div class="form-group">
+                        <label>用户密码</label>
+                        <input type="password" class="form-control" name="pwd" required="required">
+                    </div>
+                <?php endif;?>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">提交</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-primary">返回</a>
+                </div>
+            </form>
+        </div>
+    </div><!-- /.box-body -->
+    <div class="box-footer">
+    </div>
+</div>
+<script>
+    window.onload = function(){
+
+    }
+</script>

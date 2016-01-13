@@ -1,0 +1,87 @@
+<?php
+
+?>
+<div class="box box-success">
+    <div class="box-header with-border">
+        <h3 class="box-title">添加item</h3>
+    </div><!-- /.box-header -->
+        <div class="box-body">
+            <div class="col-md-4 col-md-offset-4">
+                <form role="form" id="item-form">
+                    <div class="form-group">
+                        <label>item类型</label>
+                        <select name="type" class="form-control" name="type">
+                            <option value="0">请选择</option>
+                            <?php foreach(RbacItemModel::M() as $k => $item):?>
+                                <option value="<?=$k?>"><?=$item?></option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+                    <div class="form-group fid-group" style="display: none;">
+                        <label for="">父节点</label>
+                        <select name="fid" class="form-control">
+                            <option value="0">选择父节点</option>
+<!--                            ajax-->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">item名称</label>
+                        <p class="text-danger"> (item如果是权限，那么格式如下：/模块/控制器/动作)</p>
+                        <input type="text" class="form-control" name="title" required="required">
+
+                    </div>
+                    <div class="form-group">
+                        <label for="">item描述</label>
+                        <input type="text" class="form-control" name="desc" required="required">
+                    </div>
+                    <div class="form-group show-group" style="display: none;">
+                        <label for="">可在菜单栏上显示</label>
+                        <div>
+                            <input type="radio"  name="show" value="<?= RbacItemModel::ITEM_SHOW_YES?>" checked="checked">是
+                            <input type="radio"  name="show" value="<?= RbacItemModel::ITEM_SHOW_NOT?>">否
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">提交</button>
+                        <a href="javascript:history.go(-1);" class="btn btn-primary">返回</a>
+                    </div>
+                </form>
+            </div>
+        </div><!-- /.box-body -->
+        <div class="box-footer">
+        </div>
+</div>
+<script>
+window.onload = function(){
+    $("select[name='type']").change(function(){
+        if( $(this).val() == <?=RbacItemModel::ITEM_TYPE_PERMISSION?> ){
+            //加载父节点数据
+            $.get('<?php echo Util_Helper::url('rbacmanage', 'getItemParentNodes');?>', {}, function(rz){
+                if(rz.code != 1){
+                    alert(rz.msg);return false;
+                }
+                var html = '';
+                $.each(rz.content, function(i, item){
+                    html += '<option value="'+item.id+'">'+item.desc+'</option>';
+                });
+                $("select[name='fid']").html(html);
+            }, 'json');
+            //添加权限时显示
+            $("div.fid-group,div.show-group").show();
+        }else{
+            $("div.fid-group,div.show-group").hide();
+        }
+    });
+
+    var $itemForm =  $("#item-form");
+    $itemForm.submit(function(){
+        $.post('<?php echo Util_Helper::url('rbacmanage', 'addItem');?>', $(this).serialize(), function(rz){
+            alert(rz.msg);
+            if(rz.code == 1){
+                $itemForm.find('input[type="text"]').val('');
+            }
+        }, 'json');
+       return false;
+    });
+}
+</script>

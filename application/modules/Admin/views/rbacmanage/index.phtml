@@ -1,0 +1,183 @@
+<?php
+//register page source here
+$this->cssSource = <<<CSSSOURCE
+<link rel="stylesheet" href="/plugins/ztreev3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+CSSSOURCE;
+
+$this->jsSource = <<<JSSOURCE
+<script src="/plugins/ztreev3/js/jquery.ztree.core-3.5.js"></script>
+<script src="/plugins/ztreev3/js/jquery.ztree.excheck-3.5.js"></script>
+<script src="/plugins/bootstrap-typeahead/bootstrap3-typeahead.min.js"></script>
+JSSOURCE;
+?>
+<div class="box box-success">
+    <div class="box-header">
+        <h3 class="box-title">角色分配权限</h3>
+    </div>
+    <div class="box-body">
+        <div>
+            <a href="<?php echo Util_Helper::url('rbacmanage', 'itemList'); ?>"  class="btn btn-info">角色/权限管理</a>
+        </div>
+        <!--            角色列表-->
+        <form class="form-horizontal col-md-10 col-md-offset-1">
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">选择角色</label>
+                <div class="col-sm-2">
+                    <select name="" id="role-select" class="form-control">
+                        <option value="0">请选择角色</option>
+                        <?php foreach($roleList as $k => $item):?>
+                            <option value="<?=$item['id']?>">
+                                <?=$item['title']?> (<?=$item['desc']?>)
+                            </option>
+                        <?php endforeach;?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">选择权限</label>
+                <div class="col-sm-10">
+                    <?php if(empty($permissionList)):?>
+                        <a href="<?php echo Util_Helper::url('rbacmanage', 'itemList'); ?>">还没添加任何权限节点，前往添加</a>
+                    <?php endif;?>
+                    <ul id="permissionTree" class="ztree"></ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label"></label>
+                <div class="col-sm-10">
+                    <a id="update-p-btn" class="btn btn-success" href="#" role="button">更新角色权限</a>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="box-footer clearfix">
+    </div>
+</div>
+
+<div class="box box-success">
+    <div class="box-header">
+        <h3 class="box-title">用户分配角色</h3>
+    </div>
+    <div class="box-body">
+        <div>
+            <a href="<?php echo Util_Helper::url('rbacmanage', 'userList');?>"  class="btn btn-info">用户管理</a>
+        </div>
+        <!--        用户分配角色-->
+        <form id="user-assign-role-form" class="form-horizontal col-md-10 col-md-offset-1">
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">选择用户</label>
+                <div class="col-sm-2">
+                    <select id="user-select" name="userId" class="form-control">
+                        <option value="0">请选择用户</option>
+                        <?php foreach($userDic as $k => $item):?>
+                            <option value="<?=$item['id']?>"><?=$item['name']?></option>
+                        <?php endforeach;?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label">选择角色</label>
+                <div class="col-sm-10" id="role-choose-div">
+                    <?php if(empty($roleList)):?>
+                        <a href="<?php echo Util_Helper::url('rbacmanage', 'itemList'); ?>">还没有添加任何角色，前往添加</a>
+                    <?php endif;?>
+                    <?php foreach($roleList as $k => $item):?>
+                        <input type="checkbox" name="roles[]" value="<?=$item['id']?>">
+                        <?=$item['title']?><span class="text-warning"> (<?=$item['desc']?>)</span>
+                    <?php endforeach;?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 control-label"></label>
+                <div class="col-sm-10">
+                    <a id="update-up-btn" class="btn btn-success" href="#" role="button">更新用户角色</a>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="box-footer clearfix">
+    </div>
+</div>
+<script>
+    var roleGetPermissionsUrl = '<?php echo Util_Helper::url('rbacmanage', 'roleGetPermissions'); ?>';
+    var roleAssignPermissionUrl = '<?php echo Util_Helper::url('rbacmanage', 'roleAssignPermission'); ?>';
+    var userAssignRoleUrl = '<?php echo Util_Helper::url('rbacmanage', 'userAssignRole'); ?>';
+    var getUserRoleUrl = '<?php echo Util_Helper::url('rbacmanage', 'getUserRole'); ?>';
+
+    window.onload = function(){
+        //加载权限tree
+        var setting = {
+            check: {
+                enable: true,
+                chkboxType :{
+                    "Y" : "ps",
+                    "N" : "ps"
+                }
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }
+        };
+        var zNodes = <?php echo json_encode($permissionList); ?>;
+        $.fn.zTree.init($("#permissionTree"), setting, zNodes);
+
+        var $treeObj = $.fn.zTree.getZTreeObj("permissionTree");
+
+        $("#role-select").change(function(){
+            var roleId = $(this).val();
+            $treeObj.checkAllNodes(false);
+            $.get(roleGetPermissionsUrl, {'roleId':roleId}, function(res){
+                if(res.code != 1){
+                    alert('无法获取角色权限');
+                    return false;
+                }
+                $.each(res.content, function(i, n){
+                    var id = n.item_id;
+                    //api:http://www.ztree.me/v3/api.php
+                    $treeObj.checkNode($treeObj.getNodeByParam("id", id, null), true, true);
+                });
+            }, 'json');
+        });
+
+        $("#update-p-btn").click(function(){
+            var roleId = $("#role-select").val();
+            var items = [];
+            $.each($treeObj.getCheckedNodes(), function(i, n){
+                if(n.pId != null)
+                    items.push(n.id);
+            });
+            $.post(roleAssignPermissionUrl, {"roleId": roleId,"itemIds":items}, function(res){
+                alert(res.msg);
+            }, 'json');
+        });
+
+        $("#user-select").change(function(){
+            $('#role-choose-div input[type="checkbox"]').prop('checked', false);
+            var uid = $(this).val();
+            if(uid == 0){
+                return false;
+            }
+            var $userSelect = $(this);
+            $.get(getUserRoleUrl, {uid:uid}, function(rz){
+                if(rz.code == -1){
+                    alert(rz.msg); return false;
+                }
+                $.each(rz.content, function(i, n){
+                    $('#role-choose-div input[type="checkbox"][value="'+n+'"]').prop('checked', true);
+                });
+            },'json');
+        });
+
+        $("#update-up-btn").click(function(){
+            var assignInfo  = $("#user-assign-role-form").serialize();
+            $.post(userAssignRoleUrl, assignInfo, function(res){
+                alert(res.msg);
+            }, 'json');
+        });
+
+    }
+</script>

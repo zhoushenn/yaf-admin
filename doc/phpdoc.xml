@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor>
+    <title>yaf-admin后台参考文档</title>
+    <parser>
+        <!--有毛用-->
+        <default-package-name>Core</default-package-name>
+        <encoding>utf-8</encoding>
+        <!--文档生成目录-->
+        <target>./output/yaf-admin-doc</target>
+        <markers>
+            <item>TODO</item>
+            <item>FIXME</item>
+        </markers>
+        <extensions>
+            <extension>php</extension>
+            <extension>php3</extension>
+            <!--<extension>phtml</extension>-->
+        </extensions>
+        <visibility></visibility>
+    </parser>
+    <files>
+        <ignore-hidden>true</ignore-hidden>
+        <ignore-symlinks>true</ignore-symlinks>
+        <!--<file>../core/*</file>-->
+        <directory>../core</directory>
+        <directory>../library</directory>
+        <directory>../application</directory>
+        <directory>../library</directory>
+    </files>
+    <transformer>
+        <target>output</target>
+    </transformer>
+    <logging>
+        <level>error</level>
+    </logging>
+    <transformations>
+        <template name="clean"/>
+        <!--使用自定义模板-->
+        <!--<template name="./templates/myclean"/>-->
+    </transformations>
+    <translator>
+        <locale>en</locale>
+    </translator>
+</phpdocumentor>

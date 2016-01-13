@@ -1,0 +1,51 @@
+<div class="box box-success">
+    <div class="box-header">
+        <h3 class="box-title">后台用户列表</h3>
+    </div>
+    <div class="box-body">
+        <a class="btn btn-info" href="<?php echo Util_Helper::url('rbacmanage', 'addUser');?>">添加后台用户</a>
+        <table id="data-table" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>用户名称</th>
+                <th>邮箱</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+            <form action="<?php echo Util_Helper::url('rbacmanage', 'userList');?>" method="GET">
+                <tr>
+                    <th></th>
+                    <th><input type="text" class="form-control" name="name" value="<?=$params['name']?>"></th>
+                    <th><input type="text" class="form-control" name="email"  value="<?=$params['email']?>"></th>
+                    <th></th>
+                    <th><input type="submit" class="btn btn-info" value="查询"></th>
+                </tr>
+            </form>
+            </thead>
+            <tbody>
+            <?php foreach($dataList['list'] as $k => $v): ?>
+                <tr>
+                    <td><?=$v['id']?></td>
+                    <td><?=$v['name']?></td>
+                    <td><?=$v['email']?></td>
+                    <td><?=date("Y-m-d", $v['ctime'])?></td>
+                    <td>
+                        <a href="<?php echo Util_Helper::url('rbacmanage', 'updateUser', 'default', ['id' => $v['id'],]);?>">编辑</a>
+                        <a href="<?php echo Util_Helper::url('rbacmanage', 'delUser', 'default', ['id' => $v['id'],]);?>">删除</a>
+                    </td>
+                </tr>
+            <?php endforeach;?>
+            </tbody>
+        </table>
+    </div>
+    <div class="box-footer clearfix">
+        <?=Util_Pagination::here();?>
+    </div>
+</div>
+<script>
+    window.onload = function(){
+
+
+    }
+</script>

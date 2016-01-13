@@ -1,0 +1,101 @@
+<div class="box box-success">
+    <div class="box-header">
+        <h3 class="box-title">角色/权限列表管理</h3>
+    </div>
+    <div class="box-body">
+        <a href="<?php echo Util_Helper::url('rbacmanage', 'addItem');?>" class="btn btn-info">添加角色/权限</a>
+        <table id="data-table" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>item类型</th>
+<!--                    <th>父节点ID</th>-->
+                    <th>item描述</th>
+                    <th>item名称</th>
+                    <th>是否可以显示</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                <form id="search-form" action="<?php echo Util_Helper::url('rbacmanage', 'itemList');?>" method="GET">
+                <tr>
+                    <th></th>
+                    <th>
+                        <select name="type" class="form-control">
+                            <option value="0">不限</option>
+                                <option value="<?=\RbacItemModel::ITEM_TYPE_ROLE?>"
+                                        <?php if($params['type'] == \RbacItemModel::ITEM_TYPE_ROLE):?>
+                                            selected  = 'selected '
+                                        <?php endif;?>
+                                >角色</option>
+                                <option value="nodes"
+                                    <?php if($params['type'] == 'nodes'):?>
+                                        selected  = 'selected '
+                                    <?php endif;?>
+                                >权限节点</option>
+                        </select>
+                    </th>
+<!--                    <th></th>-->
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>
+                        <button type="submit" class="btn btn-info">查询</button>
+                    </th>
+                </tr>
+                </form>
+            </thead>
+            <tbody>
+                <?php foreach($dataList as $pitem): ?>
+                    <tr data-group="<?=$pitem['id']?>" class="active">
+                        <td><?=$pitem['id']?></td>
+                        <td><?=RbacItemModel::M($pitem['type'])?></td>
+                        <td><p class="text-info"><?=$pitem['title']?></p></td>
+                        <td colspan="3"><p class="text-info"><?=$pitem['desc']?></p></td>
+                        <td><a class="del-btn btn btn-danger btn-sm" data-type="pnode" data-id="<?=$pitem['id']?>">删除</a></td>
+                    </tr>
+<!--                    子节点-->
+                    <?php if(isset($pitem['sub'])):?>
+                        <?php foreach($pitem['sub'] as $item):?>
+                            <tr data-group="<?=$item['fid']?>">
+                                <td><?=$item['id']?></td>
+                                <td><?=RbacItemModel::M($item['type'])?></td>
+                                <td><?=$item['desc']?></td>
+                                <td><?=$item['title']?></td>
+                                <td><?=RbacItemModel::MSHOW($item['show'])?></td>
+                                <td><?=date("Y-m-d", $item['ctime'])?></td>
+                                <td>
+                                    <a class="update-btn btn btn-info btn-sm" data-id="<?=$item['id']?>">编辑</a>
+                                    <a class="del-btn btn btn-danger btn-sm" data-type="snode" data-id="<?=$item['id']?>">删除</a>
+                                </td>
+                            </tr>
+                        <?php endforeach;?>
+                    <?php endif;?>
+                <?php endforeach;?>
+            </tbody>
+        </table>
+    </div>
+    <div class="box-footer clearfix">
+    </div>
+</div>
+<script>
+    window.onload = function(){
+
+        $(".del-btn").click(function(){
+            var nodeType = $(this).data('type');
+            var id       = $(this).data('id');
+            var ts = $(this);
+            $.post('<?php echo Util_Helper::url('rbacmanage', 'delItem');?>', {'nodeType':nodeType,'id':id}, function(rz){
+                if(rz.code == 1){
+                    if(nodeType == 'pnode'){
+                        $("tr[data-group='"+id+"']").remove();
+                    }
+                    if(nodeType == 'snode'){
+                        ts.parents('tr').remove();
+                    }
+                }
+                alert(rz.msg);
+            },'json');
+        });
+    }
+</script>

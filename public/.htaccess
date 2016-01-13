@@ -1,0 +1,4 @@
+#.htaccess, 当然也可以写在httpd.conf
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule .* index.php
