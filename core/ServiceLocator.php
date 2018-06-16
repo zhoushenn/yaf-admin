@@ -66,6 +66,10 @@ class ServiceLocator{
         if(!isset($this->_definitions[$name])){
            return false;
         }
+        
+        if(is_object($this->definition[$name])){
+			return $this->_components[$name] = $this->definition[$name];
+		}
 
         if(is_string($this->_definitions[$name]) && class_exists($this->_definitions[$name])){
             return $this->_components[$name] = new $this->_definitions[$name];
