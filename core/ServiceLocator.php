@@ -74,6 +74,10 @@ class ServiceLocator{
         if(is_callable($this->_definitions[$name], true)){
             return $this->_components[$name] = call_user_func_array($this->_definitions[$name], []);
         }
+	    
+	if(is_object($this->_definitions[$name])){
+	    return $this->_components[$name] = $this->_definitions[$name];
+	}
 
         throw new InvalidArgumentException("Undefined service $name");
     }
