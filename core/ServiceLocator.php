@@ -66,10 +66,6 @@ class ServiceLocator{
         if(!isset($this->_definitions[$name])){
            return false;
         }
-        
-      	if(is_object($this->_definitions[$name])){
-		return $this->_components[$name] = $this->_definitions[$name];
-	}
 
         if(is_string($this->_definitions[$name]) && class_exists($this->_definitions[$name])){
             return $this->_components[$name] = new $this->_definitions[$name];
@@ -78,6 +74,10 @@ class ServiceLocator{
         if(is_callable($this->_definitions[$name], true)){
             return $this->_components[$name] = call_user_func_array($this->_definitions[$name], []);
         }
+	    
+	if(is_object($this->_definitions[$name])){
+	    return $this->_components[$name] = $this->_definitions[$name];
+	}
 
         throw new InvalidArgumentException("Undefined service $name");
     }
